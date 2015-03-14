@@ -1,0 +1,12 @@
+<h2>Import Transactions</h2>
+
+<%= form_tag import_transactions_path, multipart: true do %>
+  <%= file_field_tag :file %>
+  <%= submit_tag "Import" %>
+<% end %>
+
+<table>
+<% @transactions.each do |x| %>
+  <tr><td><%= x.date %><td><td><%= x.amount %><td><td><%= x.info %><td></tr>
+<%end%>
+</table>
