@@ -1,9 +1,8 @@
 class Transactions < ActiveRecord::Base
   require 'csv'
-  serialize :info,Array
 
-    # def self.import(file)
 
+  # def self.import(file)
   # spreadsheet = CSV.new(file.path)
   # header = spreadsheet[0]
   # (spreadsheet).each do |i|
@@ -15,7 +14,8 @@ class Transactions < ActiveRecord::Base
   #   end
   # end
 
-    def self.amount(withdrawl, deposit)
+
+  def self.amount(withdrawl, deposit)
     if withdrawl != nil
       total = withdrawl
     else
@@ -30,8 +30,18 @@ class Transactions < ActiveRecord::Base
     else
       text_array = ["none"]
     end
-    text_array
+    if text_array.length == 4
+      info = {type: text_array[0],
+              name: text_array[1],
+              city: text_array[2],
+              state: text_array[3]}
+    else
+      info = {type: nil, name: text_array.join(), city: nil, state: nil}
+    end
+    info
   end
+
+
 
   def self.arrest_illegal_characters(file)
     header = []
@@ -45,21 +55,25 @@ class Transactions < ActiveRecord::Base
         next
       end
       row = parse_transactions(Hash[header.zip(row)])
-      transactions = find_by_id(row["id"]) || new
+      transactions = Transactions.new
       transactions.attributes = row
       transactions.save!
     end
   end
 
   def self.parse_transactions(row)
-
     attributes = {}
       amt = amount(row[:"<Withdrawal Amount>"], row[:"<Deposit Amount>"])
+      info = parse_additional_info(row[:"<Additional Info>"])
       unless amt.nil?
-       attributes = {date: row[:"<Date>"], amount: amt, info: parse_additional_info(row[:"<Additional Info>"])}
+       attributes = {
+        date: row[:"<Date>"],
+        amount: amt,
+       }.merge(info)
      end
      attributes
   end
+end
   # def self.open_spreadsheet(file)
   #   case File.extname(file.original_filename)
   #   when ".csv" then Csv.new(file.path, nil, :ignore)
@@ -69,4 +83,3 @@ class Transactions < ActiveRecord::Base
   #   end
   # end
 
-end
