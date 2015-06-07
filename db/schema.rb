@@ -21,10 +21,7 @@ ActiveRecord::Schema.define(version: 20150320022541) do
     t.integer  "amount"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "type"
-    t.string   "name"
-    t.string   "city"
-    t.string   "state"
+    t.string   "info"
   end
 
 end

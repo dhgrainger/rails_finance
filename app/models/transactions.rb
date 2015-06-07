@@ -64,12 +64,12 @@ class Transactions < ActiveRecord::Base
   def self.parse_transactions(row)
     attributes = {}
       amt = amount(row[:"<Withdrawal Amount>"], row[:"<Deposit Amount>"])
-      info = parse_additional_info(row[:"<Additional Info>"])
       unless amt.nil?
        attributes = {
-        date: row[:"<Date>"],
+        date: Date.strptime(row[:"<Date>"], '%m/%d/%Y'),
         amount: amt,
-       }.merge(info)
+        info: row[:"<Additional Info>"]
+       }
      end
      attributes
   end
