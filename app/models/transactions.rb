@@ -1,20 +1,7 @@
 class Transactions < ActiveRecord::Base
   require 'csv'
-
-
-  # def self.import(file)
-  # spreadsheet = CSV.new(file.path)
-  # header = spreadsheet[0]
-  # (spreadsheet).each do |i|
-  #     row = Hash[[header, spreadsheet.row(i)].transpose]
-  #       binding.pry
-  #     product = find_by_id(row["id"]) || new
-  #     product.attributes = row.to_hash.slice(*accessible_attributes)
-  #     product.save!
-  #   end
-  # end
-
-
+  validates :date, presence: true
+  validates :amount, presence: true
   def self.amount(withdrawl, deposit)
     if withdrawl != nil
       total = withdrawl
@@ -57,7 +44,7 @@ class Transactions < ActiveRecord::Base
       row = parse_transactions(Hash[header.zip(row)])
       transactions = Transactions.new
       transactions.attributes = row
-      transactions.save!
+      transactions.save
     end
   end
 
@@ -83,3 +70,15 @@ end
   #   end
   # end
 
+
+  # def self.import(file)
+  # spreadsheet = CSV.new(file.path)
+  # header = spreadsheet[0]
+  # (spreadsheet).each do |i|
+  #     row = Hash[[header, spreadsheet.row(i)].transpose]
+  #       binding.pry
+  #     product = find_by_id(row["id"]) || new
+  #     product.attributes = row.to_hash.slice(*accessible_attributes)
+  #     product.save!
+  #   end
+  # end
